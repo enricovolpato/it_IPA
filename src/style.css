@@ -26,6 +26,8 @@ body {
   min-height: 100vh;
   background: radial-gradient(circle at top left, #fff4e6 0%, #f2ede3 45%, #e4d2bf 100%);
   color: var(--ink);
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0;
 }
 
 #app {
@@ -127,6 +129,7 @@ textarea {
   font-size: 1rem;
   font-family: "Charis SIL", "Gentium Plus", "Noto Sans", "Avenir Next", "Gill Sans", "Trebuchet MS", sans-serif;
   font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0;
   background: #fffdf8;
   color: var(--ink);
   resize: vertical;
@@ -147,6 +150,7 @@ pre {
   font-size: 1.05rem;
   font-family: "Charis SIL", "Gentium Plus", "Noto Sans", "Avenir Next", "Gill Sans", "Trebuchet MS", sans-serif;
   font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0;
   white-space: pre-wrap;
 }
 
@@ -205,6 +209,14 @@ button.ghost {
   border-radius: 14px;
   background: #fff7ec;
   border: 1px solid rgba(184, 91, 63, 0.15);
+}
+
+.symbol-guide,
+.symbol-card,
+.symbol-name,
+.symbol-example {
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0;
 }
 
 .symbol {
