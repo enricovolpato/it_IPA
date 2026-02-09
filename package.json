@@ -23,8 +23,9 @@
   },
   "homepage": "https://YOUR_USERNAME.github.io/dizionario/",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "prepare:espeak-assets": "node scripts/copy-espeak-assets.mjs",
+    "dev": "npm run prepare:espeak-assets && vite",
+    "build": "npm run prepare:espeak-assets && tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run"
