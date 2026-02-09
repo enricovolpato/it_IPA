@@ -1,19 +1,50 @@
 import EspeakInitializer from '@echogarden/espeak-ng-emscripten'
 import { postProcessItalianIPA } from './postprocessor'
 
+const ESPEAK_INIT_TIMEOUT_MS = 15000
 
 let espeakInstance: any = null
+let espeakInitPromise: Promise<any> | null = null
+
+const withTimeout = async <T>(promise: Promise<T>, timeoutMs: number, label: string): Promise<T> => {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined
+  const timeoutPromise = new Promise<T>((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(`${label} timed out after ${timeoutMs}ms`))
+    }, timeoutMs)
+  })
+
+  try {
+    return await Promise.race([promise, timeoutPromise])
+  } finally {
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+  }
+}
 
 /**
  * Initialize the eSpeak-ng WASM module
  */
 async function initEspeak() {
   if (!espeakInstance) {
-    // Initialize the Emscripten module
-    const module = await EspeakInitializer()
-    
-    // Create an eSpeak worker instance
-    espeakInstance = new module.eSpeakNGWorker()
+    if (!espeakInitPromise) {
+      espeakInitPromise = (async () => {
+        // Initialize the Emscripten module
+        const module = await withTimeout(EspeakInitializer(), ESPEAK_INIT_TIMEOUT_MS, 'eSpeak init')
+        
+        // Create an eSpeak worker instance
+        espeakInstance = new module.eSpeakNGWorker()
+        return espeakInstance
+      })()
+    }
+
+    try {
+      await espeakInitPromise
+    } catch (error) {
+      espeakInitPromise = null
+      throw error
+    }
   }
   return espeakInstance
 }

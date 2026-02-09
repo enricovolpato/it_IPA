@@ -8,7 +8,9 @@ if (app) {
     <div class="app-shell">
       <header class="app-header">
         <div class="brand">
-          <span class="brand-mark">IPA</span>
+          <span class="brand-mark" aria-hidden="true">
+            <img src="./pronuncia-icon.svg" alt="/pronˈuntʃa/" />
+          </span>
           <div>
             <h1>Dizionario IPA</h1>
             <p>Italian text to IPA, powered by eSpeak-ng (WASM).</p>

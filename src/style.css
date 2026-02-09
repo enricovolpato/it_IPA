@@ -2,6 +2,7 @@
   font-family: "Charis SIL", "Gentium Plus", "Noto Serif", "Noto Sans", "Iowan Old Style", "Charter", "Palatino", "Georgia", serif;
   line-height: 1.5;
   font-weight: 400;
+  --ipa-font: "Charis SIL", "Gentium Plus", "Noto Serif", "Noto Sans", "Noto Sans Symbols 2", "Iowan Old Style", "Charter", "Palatino", "Georgia", serif;
   color: #1f1c18;
   background-color: #f2ede3;
   font-synthesis: none;
@@ -70,6 +71,12 @@ body {
   box-shadow: var(--shadow);
 }
 
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+}
+
 h1 {
   margin: 0;
   font-size: clamp(2rem, 3vw, 3.1rem);
@@ -127,7 +134,8 @@ textarea {
   border-radius: 14px;
   border: 1px solid var(--clay);
   font-size: 1rem;
-  font-family: "Charis SIL", "Gentium Plus", "Noto Sans", "Avenir Next", "Gill Sans", "Trebuchet MS", sans-serif;
+  font-family: var(--ipa-font);
+  font-style: italic;
   font-variant-ligatures: none;
   font-feature-settings: "liga" 0, "clig" 0;
   background: #fffdf8;
@@ -148,7 +156,8 @@ pre {
   border: 1px dashed var(--clay);
   background: #fffdf8;
   font-size: 1.05rem;
-  font-family: "Charis SIL", "Gentium Plus", "Noto Sans", "Avenir Next", "Gill Sans", "Trebuchet MS", sans-serif;
+  font-family: var(--ipa-font);
+  font-style: italic;
   font-variant-ligatures: none;
   font-feature-settings: "liga" 0, "clig" 0;
   white-space: pre-wrap;
@@ -229,7 +238,8 @@ button.ghost {
   font-weight: 700;
   background: rgba(184, 91, 63, 0.14);
   color: var(--terracotta);
-  font-family: "Charis SIL", "Gentium Plus", "Noto Sans", "Avenir Next", "Gill Sans", "Trebuchet MS", sans-serif;
+  font-family: var(--ipa-font);
+  font-style: italic;
 }
 
 .symbol-name {
@@ -239,6 +249,8 @@ button.ghost {
 .symbol-example {
   font-size: 0.92rem;
   color: var(--ink-soft);
+  font-family: var(--ipa-font);
+  font-style: italic;
 }
 
 @keyframes rise {
