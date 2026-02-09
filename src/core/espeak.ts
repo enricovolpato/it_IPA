@@ -76,12 +76,22 @@ export async function phonemize(text: string): Promise<string> {
       .replace(/ +/g, ' ')  // Normalize multiple spaces to single space
       .trim()
 
+    const ligaturedIpa = addAffricateTieBars(cleanedIpa)
+
     // Apply Italian phonological post-processing (including raddoppiamento fonosintattico)
-    const postProcessed = postProcessItalianIPA(cleaned, cleanedIpa)
+    const postProcessed = postProcessItalianIPA(cleaned, ligaturedIpa)
     
     return postProcessed
   } catch (error) {
     console.error('eSpeak error:', error)
     return `[Error: ${error instanceof Error ? error.message : 'Unknown error'}]`
   }
+}
+
+const addAffricateTieBars = (ipa: string): string => {
+  return ipa
+    .replace(/tʃ/g, 't͡ʃ')
+    .replace(/dʒ/g, 'd͡ʒ')
+    .replace(/t͡s|ts/g, 't͡s')
+    .replace(/d͡z|dz/g, 'd͡z')
 }

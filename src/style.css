@@ -135,7 +135,7 @@ textarea {
   border: 1px solid var(--clay);
   font-size: 1rem;
   font-family: var(--ipa-font);
-  font-style: italic;
+  font-style: normal;
   font-variant-ligatures: none;
   font-feature-settings: "liga" 0, "clig" 0;
   background: #fffdf8;
@@ -239,7 +239,7 @@ button.ghost {
   background: rgba(184, 91, 63, 0.14);
   color: var(--terracotta);
   font-family: var(--ipa-font);
-  font-style: italic;
+  font-style: normal;
 }
 
 .symbol-name {
@@ -250,7 +250,7 @@ button.ghost {
   font-size: 0.92rem;
   color: var(--ink-soft);
   font-family: var(--ipa-font);
-  font-style: italic;
+  font-style: normal;
 }
 
 @keyframes rise {
