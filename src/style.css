@@ -1,8 +1,40 @@
+@font-face {
+  font-family: "Charis SIL Web";
+  src: url("/fonts/CharisSIL-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Charis SIL Web";
+  src: url("/fonts/CharisSIL-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Charis SIL Web";
+  src: url("/fonts/CharisSIL-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Charis SIL Web";
+  src: url("/fonts/CharisSIL-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
-  font-family: "Charis SIL", "Gentium Plus", "Noto Serif", "Noto Sans", "Iowan Old Style", "Charter", "Palatino", "Georgia", serif;
+  font-family: "Charis SIL Web", "Charis SIL", "Gentium Plus", "Noto Serif", "Noto Sans", "Iowan Old Style", "Charter", "Palatino", "Georgia", serif;
   line-height: 1.5;
   font-weight: 400;
-  --ipa-font: "Charis SIL", "Gentium Plus", "Noto Serif", "Noto Sans", "Noto Sans Symbols 2", "Iowan Old Style", "Charter", "Palatino", "Georgia", serif;
+  --ipa-font: "Charis SIL Web", "Charis SIL", "Gentium Plus", "Noto Serif", "Noto Sans", "Noto Sans Symbols 2", "Iowan Old Style", "Charter", "Palatino", "Georgia", serif;
   color: #1f1c18;
   background-color: #f2ede3;
   font-synthesis: none;
