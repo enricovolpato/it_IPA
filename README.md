@@ -1,8 +1,8 @@
-# Dizionario IPA
+# Dizionario italiano (in IPA)
 
 Fast, AI-written implementation of espeak-ng to Italian phonological grammar, with postprocessing to include structures that span words.
 
-Site: https://YOUR_USERNAME.github.io/dizionario/
+[Website](https://enricovolpato.github.io/it_IPA/)
 
 ## Links
 
