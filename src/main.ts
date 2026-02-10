@@ -20,6 +20,7 @@ if (app) {
         <div class="panel-head">
           <label class="panel-label" for="output-text">Output IPA</label>
           <div class="panel-actions inline-actions">
+            <button id="simplified-toggle" class="ghost toggle" type="button" aria-pressed="false">OUTPUT SEMPLIFICATO</button>
             <button id="copy-btn" class="ghost" type="button">Copia IPA</button>
           </div>
         </div>
@@ -203,6 +204,8 @@ const status = document.querySelector<HTMLDivElement>('#status')
 const copyBtn = document.querySelector<HTMLButtonElement>('#copy-btn')
 const clearBtn = document.querySelector<HTMLButtonElement>('#clear-btn')
 const themeToggle = document.querySelector<HTMLButtonElement>('#theme-toggle')
+const simplifiedToggle = document.querySelector<HTMLButtonElement>('#simplified-toggle')
+let isSimplifiedOutput = false
 
 const setStatus = (message: string) => {
   if (status) {
@@ -224,7 +227,7 @@ const updateOutput = async () => {
 
   setStatus('Conversione...')
   const ipa = await phonemize(value)
-  output.textContent = ipa
+  output.textContent = isSimplifiedOutput ? buildSimplifiedOutput(value, ipa) : ipa
   setStatus('Pronto')
 }
 
@@ -238,6 +241,12 @@ clearBtn?.addEventListener('click', () => {
     output.textContent = ''
     setStatus('Pronto')
   }
+})
+
+simplifiedToggle?.addEventListener('click', () => {
+  isSimplifiedOutput = !isSimplifiedOutput
+  simplifiedToggle.setAttribute('aria-pressed', String(isSimplifiedOutput))
+  void updateOutput()
 })
 
 copyBtn?.addEventListener('click', async () => {
@@ -279,3 +288,149 @@ themeToggle?.addEventListener('click', () => {
   localStorage.setItem('theme', nextTheme)
   themeToggle?.setAttribute('aria-label', isDark ? 'Tema chiaro' : 'Tema scuro')
 })
+
+const buildSimplifiedOutput = (originalText: string, ipaText: string): string => {
+  const ipaWords = ipaText.split(/\s+/).filter(Boolean)
+  const wordMatches = [...originalText.matchAll(/\p{L}+/gu)]
+
+  if (wordMatches.length === 0 || ipaWords.length === 0) {
+    return originalText
+  }
+
+  const result: string[] = []
+  let lastIndex = 0
+  let wordIndex = 0
+
+  for (const match of wordMatches) {
+    const matchIndex = match.index ?? 0
+    const word = match[0]
+    const ipaWord = ipaWords[wordIndex] ?? ''
+
+    result.push(originalText.slice(lastIndex, matchIndex))
+
+    let simplifiedWord = replaceLettersWithIpa(word, ipaWord)
+    simplifiedWord = applyGeminationFromIpa(simplifiedWord, ipaWord)
+    result.push(simplifiedWord)
+
+    lastIndex = matchIndex + word.length
+    wordIndex += 1
+  }
+
+  result.push(originalText.slice(lastIndex))
+  return result.join('')
+}
+
+const replaceLettersWithIpa = (word: string, ipaWord: string): string => {
+  const eTokens = [...ipaWord.matchAll(/[eɛ]/g)].map(match => match[0])
+  const oTokens = [...ipaWord.matchAll(/[oɔ]/g)].map(match => match[0])
+  const zTokens = extractZTokens(ipaWord)
+  let eIndex = 0
+  let oIndex = 0
+  let zIndex = 0
+
+  return word.replace(/[eEoOzZ]/g, (char) => {
+    const lower = char.toLowerCase()
+    if (lower === 'e') {
+      const replacement = eTokens[eIndex]
+      eIndex += 1
+      return replacement ?? char
+    }
+    if (lower === 'o') {
+      const replacement = oTokens[oIndex]
+      oIndex += 1
+      return replacement ?? char
+    }
+    const replacement = zTokens[zIndex]
+    zIndex += 1
+    return replacement ?? char
+  })
+}
+
+const applyGeminationFromIpa = (word: string, ipaWord: string): string => {
+  const geminated = getGeminatedConsonant(ipaWord)
+  if (!geminated) {
+    return word
+  }
+
+  const startsWithVowel = /^[aeiouàèéìòóù]/i.test(word)
+  if (startsWithVowel) {
+    return `${geminated}${geminated}${word}`
+  }
+
+  return `${geminated}${geminated}${word.slice(1)}`
+}
+
+const getGeminatedConsonant = (ipaWord: string): string | null => {
+  const cleaned = ipaWord.replace(/^[ˈˌ]+/, '')
+  const affricates = ['t͡ʃ', 'd͡ʒ', 't͡s', 'd͡z']
+
+  for (const affricate of affricates) {
+    if (cleaned.startsWith(affricate + affricate)) {
+      return affricate
+    }
+    if (cleaned.startsWith(affricate) && cleaned.slice(affricate.length, affricate.length + 1) === 'ː') {
+      return affricate
+    }
+  }
+
+  const consonant = cleaned[0]
+  if (consonant && cleaned[1] === 'ː') {
+    return consonant
+  }
+  if (!consonant || cleaned[1] !== consonant) {
+    return null
+  }
+
+  if (!/[pbktdɡfvszʃʒmnɲŋlʎr]/.test(consonant)) {
+    return null
+  }
+
+  return consonant
+}
+
+const extractZTokens = (ipaWord: string): string[] => {
+  const tokens: string[] = []
+  const affricates = ['t͡s', 'd͡z']
+  let index = 0
+
+  while (index < ipaWord.length) {
+    let matched = false
+
+    for (const affricate of affricates) {
+      if (ipaWord.startsWith(affricate, index)) {
+        const nextIndex = index + affricate.length
+        const isLong = ipaWord[nextIndex] === 'ː'
+        tokens.push(affricate)
+        if (isLong) {
+          tokens.push(affricate)
+          index = nextIndex + 1
+        } else {
+          index = nextIndex
+        }
+        matched = true
+        break
+      }
+    }
+
+    if (matched) {
+      continue
+    }
+
+    const char = ipaWord[index]
+    if (char === 'z') {
+      const isLong = ipaWord[index + 1] === 'ː'
+      tokens.push('z')
+      if (isLong) {
+        tokens.push('z')
+        index += 2
+      } else {
+        index += 1
+      }
+      continue
+    }
+
+    index += 1
+  }
+
+  return tokens
+}

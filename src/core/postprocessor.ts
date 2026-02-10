@@ -25,8 +25,7 @@ const COGEMINANT_MONOSYLLABLES = {
   pronouns: ['che', 'chi', 'ciò', 'sé', 'tu', 'me', 'te'],
   
   // Preposizioni (prepositions)
-  prepositions: ['a', 'da', 'su', 'tra', 'fra'],
-  // Also: 'de', 'ne' in poetry
+  prepositions: ['a', 'da', 'su', 'tra', 'fra', 'de', 'ne'],
   
   // Avverbi (adverbs)
   adverbs: ['su', 'sù', 'giù', 'qui', 'qua', 'lì', 'là', 'sì', 'no', 'già', 'più', 've', 'mo'],
@@ -56,6 +55,15 @@ const NON_COGEMINANT_MONOSYLLABLES = new Set([
   'il', 'lo', 'la', 'i', 'gli', 'le',
   // Pronomi clitici (clitic pronouns)
   'mi', 'ti', 'si', 'ci', 'vi', 'li', 'ne'
+]);
+
+/**
+ * Monosillabi con dittongo discendente che non innescano il raddoppiamento
+ */
+const NON_COGEMINANT_FALLING_DIPHTHONGS = new Set([
+  'poi',
+  'mai',
+  'sei'
 ]);
 
 /**
@@ -107,6 +115,10 @@ function isCogeminant(word: string): boolean {
   
   // Check if it's explicitly NON-cogeminant
   if (NON_COGEMINANT_MONOSYLLABLES.has(normalized)) {
+    return false;
+  }
+
+  if (NON_COGEMINANT_FALLING_DIPHTHONGS.has(normalized)) {
     return false;
   }
   
@@ -245,6 +257,26 @@ export function applyRaddoppianmentoFonosintattico(
     if (i > 0) {
       const previousWord = words[i - 1];
       const cleanedPrevious = cleanWord(previousWord);
+
+      if (cleanedPrevious === 'ave' && cleanedWord === 'maria') {
+        const firstConsonant = getFirstConsonant(currentIpa);
+
+        if (firstConsonant && canGeminate(firstConsonant)) {
+          const modifiedIpa = applyGeminationToIpaWord(currentIpa, firstConsonant);
+          processedIpaWords.push(modifiedIpa);
+          continue;
+        }
+      }
+
+      if (cleanedPrevious === 'spirito' && cleanedWord === 'santo') {
+        const firstConsonant = getFirstConsonant(currentIpa);
+
+        if (firstConsonant && canGeminate(firstConsonant)) {
+          const modifiedIpa = applyGeminationToIpaWord(currentIpa, firstConsonant);
+          processedIpaWords.push(modifiedIpa);
+          continue;
+        }
+      }
       
       // Check cogeminant condition
       if (isCogeminant(cleanedPrevious)) {

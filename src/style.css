@@ -207,6 +207,13 @@ button.ghost {
   box-shadow: none;
 }
 
+button.toggle[aria-pressed="true"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: none;
+}
+
 .output-panel {
   border: 1px solid var(--border);
 }
