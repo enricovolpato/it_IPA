@@ -10,8 +10,7 @@ if (app) {
         <div class="panel-head">
           <label class="panel-label" for="input-text">Testo di input</label>
           <div class="panel-actions inline-actions">
-            <button id="example-btn" type="button">Esempio</button>
-            <button id="clear-btn" class="ghost" type="button">Pulisci</button>
+            <button id="clear-btn" class="ghost" type="button">Cancella tutto</button>
           </div>
         </div>
         <textarea id="input-text" placeholder="Scrivi o incolla un testo in italiano..."></textarea>
@@ -203,9 +202,6 @@ const output = document.querySelector<HTMLPreElement>('#output-text')
 const status = document.querySelector<HTMLDivElement>('#status')
 const copyBtn = document.querySelector<HTMLButtonElement>('#copy-btn')
 const clearBtn = document.querySelector<HTMLButtonElement>('#clear-btn')
-const exampleBtn = document.querySelector<HTMLButtonElement>('#example-btn')
-
-const exampleText = 'Nel mezzo del cammin di nostra vita'
 const themeToggle = document.querySelector<HTMLButtonElement>('#theme-toggle')
 
 const setStatus = (message: string) => {
@@ -241,13 +237,6 @@ clearBtn?.addEventListener('click', () => {
     input.value = ''
     output.textContent = ''
     setStatus('Pronto')
-  }
-})
-
-exampleBtn?.addEventListener('click', () => {
-  if (input) {
-    input.value = exampleText
-    void updateOutput()
   }
 })
 
