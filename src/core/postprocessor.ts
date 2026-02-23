@@ -142,16 +142,16 @@ function getFirstConsonant(ipaWord: string): string | null {
   // Remove stress marks at the beginning
   const cleaned = ipaWord.replace(/^[ˈˌ]+/, '');
   
-  // Match common IPA consonants at the start of the word
-  const consonantMatch = cleaned.match(/^[pbktdɡfvszʃʒmnɲŋlʎrʝɟçʝβðɣχʁħʕʔ]/);
-  if (consonantMatch) {
-    return consonantMatch[0];
-  }
-  
-  // Match affricates
+  // Match affricates FIRST (before single consonants, since 't͡ʃ' starts with 't')
   const affricateMatch = cleaned.match(/^(t͡ʃ|d͡ʒ|t͡s|d͡z)/);
   if (affricateMatch) {
     return affricateMatch[0];
+  }
+  
+  // Match single IPA consonants
+  const consonantMatch = cleaned.match(/^[pbktdɡfvszʃʒmnɲŋlʎrʝɟçʝβðɣχʁħʕʔ]/);
+  if (consonantMatch) {
+    return consonantMatch[0];
   }
   
   return null;
@@ -230,7 +230,7 @@ function cleanWord(word: string): string {
  * @param ipaText The IPA transcription from eSpeak
  * @returns Modified IPA with raddoppiamento fonosintattico applied
  */
-export function applyRaddoppianmentoFonosintattico(
+export function applyRaddoppiamentoFonosintattico(
   originalText: string,
   ipaText: string
 ): string {
@@ -322,7 +322,7 @@ export function postProcessItalianIPA(
   ipaText: string
 ): string {
   // Apply raddoppiamento fonosintattico
-  let processed = applyRaddoppianmentoFonosintattico(originalText, ipaText);
+  let processed = applyRaddoppiamentoFonosintattico(originalText, ipaText);
   
   // Additional rules can be added here:
   // - Vowel quality adjustments (è vs é, ò vs ó)

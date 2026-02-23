@@ -171,6 +171,14 @@ pre {
   white-space: pre-wrap;
 }
 
+pre.output-simplified {
+  font-style: normal;
+}
+
+.ipa-emphasis {
+  font-style: italic;
+}
+
 .panel-actions {
   display: flex;
   gap: 0.75rem;
